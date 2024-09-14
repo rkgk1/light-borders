@@ -125,7 +125,7 @@ VertexShader =
 		VS_OUTPUT main(const VS_INPUT v )
 		{
 			VS_OUTPUT Out;
-			Out.vPosition  	= mul( ViewProjectionMatrix, float4( v.vPosition.x, 0.0f, v.vPosition.y, 1.0f ) );
+			Out.vPosition  	= mul( ViewProjectionMatrix, float4( v.vPosition.x, 1.0f, v.vPosition.y, 1.0f ) ); // 1. Raises the border (Before: float4( v.vPosition.x, 0.0f,)
 			Out.vUV			= v.vUV;
 			Out.vPos 		= v.vPosition.xy;
 			return Out;
