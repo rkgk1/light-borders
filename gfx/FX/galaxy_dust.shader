@@ -135,7 +135,7 @@ PixelShader =
 			float4 vBorderColor = tex2Dproj( Border, v.vScreenCoord );
 			
 			vBorderColor.a = saturate( vBorderColor.a * 0.8f );
-			vColor.rgb = lerp( vColor.rgb, vBorderColor.rgb * 1.f, vBorderColor.a );
+			vColor.rgb = lerp( vColor.rgb, vBorderColor.rgb * 1.0f, vBorderColor.a * 1.9f); // (Before: vColor.rgb = lerp( vColor.rgb, vBorderColor.rgb, vBorderColor.a *1.9f );)
 
 			float vBorderTI = 0.80f; // Saturate border under TI
 			vTI = saturate( vTI + ( vBorderColor.a * vBorderTI ) * saturate( ( 1.0f - vTI ) * 1000 ) );
