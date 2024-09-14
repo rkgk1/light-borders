@@ -1,1 +1,1 @@
-Stellaris light borders.
+Stellaris light borders
