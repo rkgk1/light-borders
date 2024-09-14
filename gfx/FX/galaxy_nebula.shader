@@ -120,15 +120,15 @@ PixelShader =
 			
 			float4 vBorderColor = tex2Dproj( Border, v.vScreenCoord );
 			
-			vBorderColor.a = saturate( vBorderColor.a * 0.5f );
-			vColor.rgb = lerp( vColor.rgb, vBorderColor.rgb * 2.0f, vBorderColor.a );
+			vBorderColor.a = saturate( vBorderColor.a * 0.1f ); // (Before: ( vBorderColor.a * 0.5f ))
+			vColor.rgb = lerp( vColor.rgb, vBorderColor.rgb * 0.1f, vBorderColor.a ); // (Before: ( vColor.rgb, vBorderColor.rgb * 2.0f, vBorderColor.a ))
 
 			float4 vTIColor = ApplyTerraIncognitaValue( vColor, TI_GRAY_BRIGHTNESS, vTI );
 
 			float vBorderTI = 0.8f; // Saturate border under TI
 			vTI = saturate( vTI + ( vBorderColor.a * vBorderTI ) * saturate( ( 1.0f - vTI ) * 1000 ) );
 
-			vColor = vDiffuse * lerp( vColor, vTIColor + vBorderColor.a * 0.3f, 1.0f - vTI );
+			vColor = vDiffuse * lerp( vColor, vTIColor + vBorderColor.a * 0.1f, 1.0f - vTI ); // (Before: ( vColor, vTIColor + vBorderColor.a * 0.3f, 1.0f - vTI ))
 
 			return vColor;
 		}
