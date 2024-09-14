@@ -181,13 +181,13 @@ PixelShader =
 			
 			float vMid = lerp( vMinMidDistance, vMaxMidDistance, vCamDistFactor );
 			
-			float vEpsilon = 0.005f + vCamDistFactor * 0.05f;
+			float vEpsilon = 0.005f + vCamDistFactor * 0.005f; // (Before: vCamDistFactor * 0.05f)
 			float vOffset = -0.000f;
 			float vAlpha = smoothstep( vMid + vEpsilon, vMid - vEpsilon, vDist + vOffset );
 					
-			float vAlphaMin = 0.5f + 0.5f * vCamDistFactor;
+			float vAlphaMin = 0.1f + 0.5f * vCamDistFactor; // (Before:  = 0.5f + 0.5f * vCamDistFactor;)
 			
-			float vEdgeWidth = 0.025f + 0.35f * vCamDistFactor;
+			float vEdgeWidth = 0.025f + 0.35f * vCamDistFactor / 3.5; // Added / 3.5
 			const float vEdgeSharpness = 100.0f;			
 			float vBlackBorderWidth = vEdgeWidth * 0.25f;
 			const float vBlackBorderSharpness = 25.0f;
@@ -197,9 +197,9 @@ PixelShader =
 			//vAlphaEdge is the saturated part at the outer edge
 			float vAlphaEdge = saturate( (vDist-vMid + vEdgeWidth)*vEdgeSharpness );
 			//vAlphaFill is the soft gradient inside the blobs
-			float vAlphaFill = max( vAlphaMin, saturate( vMid + (vDist-0.25f + vEdgeWidth*1.0f)*2.0f ) * 0.75f );
+			float vAlphaFill = max( vAlphaMin, saturate( vMid + (vDist-0.8f + vEdgeWidth*8.0f)*2.0f ) * 0.6f ); // (Before: float vAlphaFill = max( vAlphaMin, saturate( vMid + (vDist-0.25f + vEdgeWidth*1.0f)*2.0f ) * 0.75f ))
 
-			float4 vColor = vAlphaEdge *  PrimaryColor + ( 1 - vAlphaEdge ) * SecondaryColor;
+			float4 vColor = vAlphaEdge * clamp( PrimaryColor, float4(0.2, 0.2, 0.2, 1.0), float4(0.9, 0.9, 0.9, 1.0)) * 1.9f + ( 1 - vAlphaEdge ) * SecondaryColor; // (Before: float4 vColor = vAlphaEdge *  PrimaryColor + ( 1 - vAlphaEdge ) * SecondaryColor;)
 
 			//Add a black edge that becomes more visible the further away from the camera it is
 			vColor *= 1.0f - ( 0.25f * saturate( (vDist-vMid + vBlackBorderWidth)*vBlackBorderSharpness ) );
@@ -231,7 +231,7 @@ PixelShader =
 		float4 main( VS_OUTPUT_STAR_PIN v ) : PDX_COLOR
 		{
 			float4 vColor = vStarPinColor;
-			vColor.a *= 0.2f;
+			vColor.a *= 0.0f; // (Before: vColor.a *= 0.2f;)
 			
 			vColor = ApplyTerraIncognita( vColor, v.vPos.xz, 4.f, TerraIncognitaTexture );
 			
@@ -247,7 +247,7 @@ PixelShader =
 			float vDistance = min( v.vDistance/64.0f, 0.5f - vDist );
 			clip( vDistance - 0.0001f );
 					
-			float vThickness = 0.005f + ( vCamZoom / 70000.f );
+			float vThickness = 0.005f + ( vCamZoom / 70000.f ) / 3.0f; // Added 3.0f
 			float vInvThickness = 1.f / vThickness;
 			
 			//1 - ( (x - 0.25) * 4 ) ^ 2
@@ -260,7 +260,7 @@ PixelShader =
 			vValue = saturate( vValue );
 			
 			float3 vColor = float3( 1.f, 1.f, 1.f );
-			return float4( vColor * vValue, vValue * 0.75f  + 0.8f);
+			return float4( vColor * vValue, vValue * 0.75f  + 0.3f); // (Before: return float4( vColor * vValue, vValue * 0.75f  + 0.8f))
 		}
 	]]
 }
